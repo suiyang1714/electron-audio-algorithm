@@ -35,9 +35,7 @@
             }
         },
         mounted () {
-            ipcRenderer.send('onCompileFile', {
-                ...this.formData
-            })
+
         },
         methods: {
             onSettingInputPath () {
