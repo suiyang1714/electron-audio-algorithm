@@ -16,7 +16,9 @@ cache:
 
 init:
   - git config --global core.autocrlf input
-
+environment:
+  my_variable:
+    secure: k1UCrf09zCi3jLxdPlcX6JmcrGVvbR2UAIdnsX1odLR+QNZ33pctJhdtnm56kOOy
 install:
   - ps: Install-Product node 8 x64
   - git reset --hard HEAD
