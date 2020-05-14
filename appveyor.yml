@@ -20,7 +20,7 @@ environment:
   my_variable:
     secure: k1UCrf09zCi3jLxdPlcX6JmcrGVvbR2UAIdnsX1odLR+QNZ33pctJhdtnm56kOOy
 install:
-  - ps: Install-Product node 8 x64
+  - ps: Install-Product node 10
   - git reset --hard HEAD
   - yarn
   - node --version
