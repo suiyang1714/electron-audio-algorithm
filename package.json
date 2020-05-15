@@ -1,6 +1,6 @@
 {
   "name": "electron-audio-algorithm",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "author": "Aditya <171426589@qq.com>",
   "description": "An electron-vue project",
   "license": null,
@@ -18,7 +18,8 @@
     "pack:renderer": "cross-env NODE_ENV=production webpack --progress --colors --config .electron-vue/webpack.renderer.config.js",
     "postinstall": "npm run lint:fix",
     "rebuild": "cd ./node_modules/.bin && electron-rebuild --force --module-dir=../../",
-    "publish": "electron-builder --publish onTagOrDraft"
+    "publish": "electron-builder --publish onTagOrDraft",
+    "release": "node .electron-vue/build.js && electron-builder"
   },
   "build": {
     "productName": "electron-audio-algorithm",
