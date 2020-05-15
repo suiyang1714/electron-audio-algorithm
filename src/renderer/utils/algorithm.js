@@ -4,14 +4,13 @@ import path from 'path'
 import FFmpeg from 'fluent-ffmpeg'
 const Lame = require('node-lame').Lame
 
+const defaultPath = path.join(__dirname, '../')
 const libm = ffi.Library(
-    './src/renderer/utils/libsleep.dylib',
+    `${__dirname}/libsleep.dylib`,
     {
         'sound_identify': ['void', ['uint32', 'string', 'string', 'string', 'bool']]
     }
 )
-
-const defaultPath = path.join(__dirname, '../')
 
 // 算法函数
 const algorithm = async (buf, arg, fileName) => {
@@ -61,7 +60,7 @@ const algorithm = async (buf, arg, fileName) => {
 
 // mp3 转 wav
 const ffmpeg = (filePath, fileName, arg) => {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         FFmpeg(`${filePath}/${fileName}.mp3`)
             .output(`${filePath}/${fileName}.wav`)
             .withAudioFrequency(16000)
@@ -80,7 +79,7 @@ const ffmpeg = (filePath, fileName, arg) => {
 
 // 格式 wav / pcm 转 Buffer
 const lame = (filePath, fileName, arg, type, isDelete) => {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         const encoder = new Lame({
             'output': 'buffer',
             'disable-info-tag': true
@@ -96,6 +95,7 @@ const lame = (filePath, fileName, arg, type, isDelete) => {
                     fs.unlinkSync(`${filePath}/${fileName}.${type}`)
                 }
                 await algorithm(buffer, arg, fileName)
+                resolve()
             })
             .catch((error) => {
                 // Something went wrong
