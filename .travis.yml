@@ -1,37 +1,46 @@
+# Commented sections below can be used to run tests on the CI server
+# https://simulatedgreg.gitbooks.io/electron-vue/content/en/testing.html#on-the-subject-of-ci-testing
 osx_image: xcode8.3
 sudo: required
 dist: trusty
 language: c
+env:
+  global:
+    - secure: "pN/U5dwzaAk3UjPO10Kw8zqc7cjtHYmialRdKIkcV0ruZ/9PtRe3ERoaOA7Wf6ZB0rzZhmoMedf6iaqcE3OOy0al6S+i8H+KAwrX9noYguaV8nA2W8OzCNteOcEhhtzTyvxXIogIrfDA6BA9O9tcwICM62Riv1Fkth3Sj+Bz5fejd/XFjqLEI6IHhfmlqUjb0eKmMxc8pGbcEiUWheOThv7fNRCPO6Pvg83fRYGTjSSwNmywlwbfE5s5yOXoAac7+UyKrRwTBgHGzimLVqOPqHbkDWAqire3uMycMYchuA73btccw/xSloxLi3XwSoDeV92qPvg3cM4tZ0WKRLRCwvqGQ1AR3b7fqwiVq/g79qndaz9h/DYDm7IZoPQx700HdIIrPR7ATW4R+SIdVBwnP3kVgt61y76fhw7ELeFf9S1X0orilPfWBtfKcXtStTW02gnsLbdEJUW3L/RN+YPHDE6Zq0urhPrme0fT3A5qanrZmSCb/BpItFrk90r4UQW2Qrup2hbvOfPNqySVqx+hTsL8VaY0Hc/KirwzvcmeWNh3SDo/d+SFkcqUphaW/sLK7GE4hf4n/jTU7sxJF4qaajjLrr2sC3+HHYlDzIF54ebsUhmIkBIwLmF6Ir//XNje19s4CTgBlb0jn+jZtJPh8hMrD0backnW3j4fTX7zRXI="
 matrix:
   include:
-  - os: osx
-  - os: linux
-    env: CC=clang CXX=clang++ npm_config_clang=1
-    compiler: clang
+    - os: osx
+    - os: linux
+      env: CC=clang CXX=clang++ npm_config_clang=1
+      compiler: clang
 cache:
   directories:
-  - node_modules
-  - "$HOME/.electron"
-  - "$HOME/.cache"
+    - node_modules
+    - "$HOME/.electron"
+    - "$HOME/.cache"
 addons:
   apt:
     packages:
-    - libgnome-keyring-dev
-    - icnsutils
+      - libgnome-keyring-dev
+      - icnsutils
+    #- xvfb
 before_install:
-- mkdir -p /tmp/git-lfs && curl -L https://github.com/github/git-lfs/releases/download/v1.2.1/git-lfs-$([
-  "$TRAVIS_OS_NAME" == "linux" ] && echo "linux" || echo "darwin")-amd64-1.2.1.tar.gz
-  | tar -xz -C /tmp/git-lfs --strip-components 1 && /tmp/git-lfs/git-lfs pull
-- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install --no-install-recommends -y icnsutils graphicsmagick xz-utils; fi
+  - mkdir -p /tmp/git-lfs && curl -L https://github.com/github/git-lfs/releases/download/v1.2.1/git-lfs-$([
+    "$TRAVIS_OS_NAME" == "linux" ] && echo "linux" || echo "darwin")-amd64-1.2.1.tar.gz
+    | tar -xz -C /tmp/git-lfs --strip-components 1 && /tmp/git-lfs/git-lfs pull
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install --no-install-recommends -y icnsutils graphicsmagick xz-utils; fi
 install:
-- nvm install 10
-- curl -o- -L https://yarnpkg.com/install.sh | bash
-- source ~/.bashrc
-- npm install -g xvfb-maybe
-- yarn
+  #- export DISPLAY=':99.0'
+  #- Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+  - nvm install 10
+  - curl -o- -L https://yarnpkg.com/install.sh | bash
+  - source ~/.bashrc
+  - npm install -g xvfb-maybe
+  - yarn
 script:
-- npm run release
-- yarn run build
+  #- xvfb-maybe node_modules/.bin/karma start test/unit/karma.conf.js
+  #- yarn run pack && xvfb-maybe node_modules/.bin/mocha test/e2e
+  - npm run release
 branches:
   only:
-  - master
+    - master
